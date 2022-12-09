@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if Category %}
+        {{ category.description|truncatewords:200 }}
+    {% else %}
+        Welcome to Milanium store where you will have a variety of collections...
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if Category %}
+        {{ category.name }} - MILANIUM Store
+    {% else %}
+       See our new collections
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if Category %}
+
+<div>
+    <div class="row my_row_class">
+        <div class="mx-auto">
+            <p><a href="{% url 'ecommerceapp:allProdCat' %}">Our Product Collections</a></p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="mx-auto">
+{% if category %}
+
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}" width="300px;" height="400px;">
+</div>
+    <br>
+<div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/MILANIUM.png' %}" alt="our products" width="1300px;" height="430">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">Our products Collections</h1>
+    <p class="text-justify">Using generated text is a great way to test out the fit and finish of your design work. For instance, you can see how a template handles exceptionally long passages or even analyze how readable your typography is. This provides you with the information you need to make smart design decisions.</p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:18rem;">
+                <a href="{{product.get_url}}"><img class="card-image-top my_image" src="{{product.img.url}}" alt="{{product.name}}" style="width:200px;height:300px"></a>
+                <div class="card_body">
+                    <h4>{{product.name}}</h4>
+                    <p>{{product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx_auto">
+        {% if products.paginator.num_pages > 1 %}
+
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+                <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}"}>{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+
+{% endblock %}
